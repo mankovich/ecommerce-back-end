@@ -33,16 +33,48 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   Tag.create({
-
+    tag_name: req.body.tag_name,
   })
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ msg: "error", err });
+    });
 });
 
 router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value
+  Tag.update(req.body, {
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((data) => {
+      if (!data[0]) {
+        return res.status(404).json({ msg: "no such tag" });
+      }
+      res.json(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ msg: "error", err });
+    });
 });
 
 router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
+  Tag.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ msg: "error", err });
+    });
 });
 
 module.exports = router;
